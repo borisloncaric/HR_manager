@@ -64,10 +64,17 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
-
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.log
+*.tmp
 # Tye
 .tye/
-
+appsettings.json
+appsettings.Development.json
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
