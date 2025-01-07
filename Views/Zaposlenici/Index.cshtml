@@ -1,0 +1,38 @@
+﻿@model IEnumerable<HR_menager.Models.Zaposlenik>
+
+@{
+    ViewData["Title"] = "Popis zaposlenika";
+}
+
+<h2>Popis zaposlenika</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Radno mjesto</th>
+            <th>Kontakt broj</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var zaposlenik in Model)
+        {
+            <tr>
+                <td>@zaposlenik.Id</td>
+                <td>@zaposlenik.Ime</td>
+                <td>@zaposlenik.Prezime</td>
+                <td>@ViewBag.RadnaMjesta[@zaposlenik.RadnoMjestoId]</td>
+                <td>@zaposlenik.BrojTelefona</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@zaposlenik.Id" class="btn btn-primary btn-sm">Uredi</a>
+                    <a asp-action="Delete" asp-route-id="@zaposlenik.Id" class="btn btn-danger btn-sm">Izbriši</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-success">Dodaj novog zaposlenika</a>

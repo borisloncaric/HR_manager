@@ -1,0 +1,32 @@
+﻿@model HR_menager.Models.Zaposlenik
+
+@{
+    ViewData["Title"] = "Izbriši zaposlenika";
+}
+
+<h2>Želite li izbrisati zaposlenika?</h2>
+
+<div>
+    <h4>Zaposlenik</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Ime:</dt>
+        <dd>@Model.Ime</dd>
+
+        <dt>Prezime:</dt>
+        <dd>@Model.Prezime</dd>
+
+        <dt>Broj Telefona:</dt>
+        <dd>@Model.BrojTelefona</dd>
+
+        <dt>Radno Mjesto:</dt>
+        <dd>@ViewBag.radnoMjesto</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Izbriši</button>
+    <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+</form>
+

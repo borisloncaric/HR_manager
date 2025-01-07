@@ -1,0 +1,51 @@
+﻿@model HR_menager.Models.Zaposlenik
+
+@{
+    ViewData["Title"] = "Uredi zaposlenika";
+}
+<form asp-action="Edit" method="post">
+    @if (!ViewContext.ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var error in ViewContext.ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <!-- Form Fields here -->
+    <div class="form-group">
+        <label asp-for="Id" class="control-label"></label>
+        <input asp-for="Id" class="form-control" disabled="disabled" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Ime" class="control-label"></label>
+        <input asp-for="Ime" class="form-control" />
+        <span asp-validation-for="Ime" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Prezime" class="control-label"></label>
+        <input asp-for="Prezime" class="form-control" />
+        <span asp-validation-for="Prezime" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BrojTelefona" class="control-label"></label>
+        <input asp-for="BrojTelefona" class="form-control" />
+        <span asp-validation-for="BrojTelefona" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RadnoMjestoId" class="control-label"></label>
+        <select asp-for="RadnoMjestoId" class="form-control" asp-items="@(new SelectList(ViewBag.RadnaMjesta, "Id", "Naziv"))">
+            
+        </select>
+        <span asp-validation-for="RadnoMjestoId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Spremi</button>
+    <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+</form>

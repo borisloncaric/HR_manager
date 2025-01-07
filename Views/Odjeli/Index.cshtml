@@ -1,0 +1,32 @@
+﻿@model IEnumerable<HR_menager.Models.Odjel>
+
+@{
+    ViewData["Title"] = "Popis odjela";
+}
+
+<h2>Popis odjela</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Naziv</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var odjel in Model)
+        {
+            <tr>
+                <td>@odjel.Id</td>
+                <td>@odjel.Naziv</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@odjel.Id" class="btn btn-primary btn-sm">Uredi</a>
+                    <a asp-action="Delete" asp-route-id="@odjel.Id" class="btn btn-danger btn-sm">Izbriši</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-success">Dodaj novi odjel</a>

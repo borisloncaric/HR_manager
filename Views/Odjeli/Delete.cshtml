@@ -1,0 +1,37 @@
+﻿@model HR_menager.Models.Odjel
+
+@{
+    ViewData["Title"] = "Izbriši odjel";
+}
+
+<h2>Želite li izbrisati odjel?</h2>
+
+<div>
+    <h4>Odjel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Naziv:</dt>
+        <dd>@Model.Naziv</dd>
+        <dt>Radna mjesta:</dt>
+        @if (ViewBag.radnaMjesta != null && ((List<RadnoMjesto>)ViewBag.radnaMjesta).Any())
+        {
+         
+            foreach (var mjesto in (List<RadnoMjesto>)ViewBag.radnaMjesta)
+            {
+                <dd>@mjesto.Naziv</dd>
+            }
+        }
+        else
+        {
+            <dd>Nema radnih mjesta.</dd>
+        }
+    </dl>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Izbriši</button>
+    <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+</form>
+
+
