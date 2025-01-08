@@ -11,7 +11,7 @@ namespace HR_menager.Models
 
         [Key]
         [Column("id")]
-        [Display(Name = "ID")]
+        [Display(Name = "Šifra odjela")]
         public int Id
         {
             get => this.id;

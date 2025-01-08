@@ -9,7 +9,7 @@
         private DateOnly pocetniDatum;
         private DateOnly krajnjiDatum;
         private string razlog;
-        private StatusZahtjeva status;
+        private StatusZahtjeva? status;
 
         public int Id { get => this.id; private set { this.id = value; } }
         public Zaposlenik Zaposlenik { get => this.zaposlenik;  set { this.zaposlenik = value; } }
@@ -17,7 +17,7 @@
         public DateOnly PocetniDatum { get => this.pocetniDatum;  set { this.pocetniDatum = value; } }
         public DateOnly KrajnjiDatum { get => this.krajnjiDatum;  set { this.krajnjiDatum = value; } }
         public string Razlog { get => this.razlog;  set { this.razlog = value; } }
-        public StatusZahtjeva StatusZahtjeva { get => this.status;  set { this.status = value; } }
+        public StatusZahtjeva? StatusZahtjeva { get => this.status;  set { this.status = value; } }
 
         public ZahtjevZaSlobodanDan()
         {

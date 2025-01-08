@@ -10,11 +10,11 @@ namespace HR_menager.Models
         private int id;
         private string naziv;
         private int odjelId;
-
+        private Odjel? odjel;
         // Public properties with encapsulation
         [Key]
         [Column("id")]
-        [Display(Name ="ID")]
+        [Display(Name ="Šifra radnog mjesta")]
         public int Id { get => this.id; set { this.id = value; } }
         [Column("naziv")]
         [Display(Name ="Naziv")]
@@ -24,7 +24,7 @@ namespace HR_menager.Models
         [Display(Name ="Odjel")]
         public int OdjelId { get => this.odjelId; set { this.odjelId = value; } }
 
-   
+        public Odjel? Odjel { get => this.odjel; set { this.odjel = value; } }
 
      
     }

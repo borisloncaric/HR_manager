@@ -46,11 +46,14 @@ namespace HR_menager.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Add the new RadnoMjesto to the database
                 _context.RadnaMjesta.Add(radnoMjesto);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
 
+            // Repopulate ViewBag.Odjeli if the form is invalid
+            ViewBag.Odjeli = _context.Odjeli.ToList();
             return View(radnoMjesto);
         }
 

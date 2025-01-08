@@ -40,7 +40,7 @@
     </div>
     <div class="form-group">
         <label asp-for="RadnoMjestoId" class="control-label"></label>
-        <select asp-for="RadnoMjestoId" class="form-control" asp-items="@(new SelectList(ViewBag.RadnaMjesta, "Id", "Naziv"))">
+        <select asp-for="RadnoMjestoId" class="form-control" asp-items="@ViewBag.RadnaMjesta">
             
         </select>
         <span asp-validation-for="RadnoMjestoId" class="text-danger"></span>

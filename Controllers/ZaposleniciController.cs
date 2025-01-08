@@ -2,6 +2,7 @@
 using HR_menager.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace HR_menager.Controllers
@@ -18,10 +19,24 @@ namespace HR_menager.Controllers
         // GET: Zaposlenici
         public ActionResult Index()
         {
-            
+            // Load all zaposlenici
             var zaposlenici = _context.Zaposlenici.ToList();
-            var radnaMjesta = _context.RadnaMjesta.ToDictionary(r => r.Id, r => r.Naziv);
-            ViewBag.RadnaMjesta = radnaMjesta;
+
+            // Join RadnaMjesta and Odjeli to create the display dictionary
+            var radnaMjestaWithOdjeli = _context.RadnaMjesta
+                .Join(
+                    _context.Odjeli,
+                    rm => rm.OdjelId,
+                    o => o.Id,
+                    (rm, o) => new
+                    {
+                        RadnoMjestoId = rm.Id,
+                        CombinedName = $"{rm.Naziv} ({o.Naziv})"
+                    }
+                ).ToDictionary(x => x.RadnoMjestoId, x => x.CombinedName);
+
+            // Pass the dictionary to the ViewBag
+            ViewBag.RadnaMjesta = radnaMjestaWithOdjeli;
 
             return View(zaposlenici);
         }
@@ -38,7 +53,21 @@ namespace HR_menager.Controllers
         // GET: Zaposlenici/Create
         public ActionResult Create()
         {
-            ViewBag.RadnaMjesta = _context.RadnaMjesta.ToList();
+            // Combine RadnoMjesto and Odjel
+            var radnaMjestaWithOdjeli = _context.RadnaMjesta
+                .Join(
+                    _context.Odjeli, // Join with Odjeli
+                    rm => rm.OdjelId, // Foreign key
+                    o => o.Id,        // Primary key
+                    (rm, o) => new
+                    {
+                        Id = rm.Id,
+                        Naziv = $"{rm.Naziv} ({o.Naziv})" // Combine RadnoMjesto and Odjel
+                    }
+                ).ToList();
+
+            // Pass the combined list to the view
+            ViewBag.RadnaMjesta = new SelectList(radnaMjestaWithOdjeli, "Id", "Naziv");
             return View();
         }
 
@@ -49,29 +78,63 @@ namespace HR_menager.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Optional: Verify or fetch the associated Odjel if needed
+                var radnoMjesto = _context.RadnaMjesta.FirstOrDefault(rm => rm.Id == zaposlenik.RadnoMjestoId);
+                if (radnoMjesto == null)
+                {
+                    ModelState.AddModelError("RadnoMjestoId", "Invalid RadnoMjesto selected.");
+                    return View(zaposlenik);
+                }
+
                 _context.Zaposlenici.Add(zaposlenik);
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index)); 
+                return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.RadnaMjesta = _context.RadnaMjesta.ToList();
+            // Repopulate dropdown in case of validation error
+            var radnaMjestaWithOdjeli = _context.RadnaMjesta
+                .Join(
+                    _context.Odjeli,
+                    rm => rm.OdjelId,
+                    o => o.Id,
+                    (rm, o) => new
+                    {
+                        Id = rm.Id,
+                        Naziv = $"{rm.Naziv} ({o.Naziv})"
+                    }
+                ).ToList();
+            ViewBag.RadnaMjesta = new SelectList(radnaMjestaWithOdjeli, "Id", "Naziv");
+
             return View(zaposlenik);
         }
 
         // GET: Zaposlenici/Edit/5
         public ActionResult Edit(int id)
         {
-            var zap = _context.Zaposlenici
-       .FirstOrDefault(z => z.Id == id);
-
-            if (zap == null)
+            // Get the Zaposlenik by id
+            var zaposlenik = _context.Zaposlenici.FirstOrDefault(z => z.Id == id);
+            if (zaposlenik == null)
             {
                 return NotFound();
             }
 
-            ViewBag.RadnaMjesta = _context.RadnaMjesta.ToList();
+            // Join RadnaMjesta and Odjeli to create the combined Radno Mjesto + Odjel
+            var radnaMjestaWithOdjeli = _context.RadnaMjesta
+                .Join(
+                    _context.Odjeli,
+                    rm => rm.OdjelId,
+                    o => o.Id,
+                    (rm, o) => new
+                    {
+                        RadnoMjestoId = rm.Id,
+                        CombinedName = $"{rm.Naziv} ({o.Naziv})"
+                    }
+                ).ToList();
 
-            return View(zap);
+            // Store the combined RadnoMjesto + Odjel in ViewBag for the dropdown
+            ViewBag.RadnaMjesta = new SelectList(radnaMjestaWithOdjeli, "RadnoMjestoId", "CombinedName", zaposlenik.RadnoMjestoId);
+
+            return View(zaposlenik);
         }
 
         // POST: Zaposlenici/Edit/5
@@ -88,14 +151,9 @@ namespace HR_menager.Controllers
             {
                 try
                 {
-                    var radnoMjesto = _context.RadnaMjesta.FirstOrDefault(r => r.Id == zaposlenik.RadnoMjestoId);
-                    if (radnoMjesto != null)
-                    {
-                        zaposlenik.RadnoMjestoId = radnoMjesto.Id; 
-                    }
-
+                    // Update Zaposlenik in the database
                     _context.Update(zaposlenik);
-                     _context.SaveChanges();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -108,10 +166,25 @@ namespace HR_menager.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.RadnaMjesta = _context.RadnaMjesta.ToList();
+            // Repopulate the dropdown in case of validation failure
+            var radnaMjestaWithOdjeli = _context.RadnaMjesta
+                .Join(
+                    _context.Odjeli,
+                    rm => rm.OdjelId,
+                    o => o.Id,
+                    (rm, o) => new
+                    {
+                        RadnoMjestoId = rm.Id,
+                        CombinedName = $"{rm.Naziv} ({o.Naziv})"
+                    }
+                ).ToList();
+
+            ViewBag.RadnaMjesta = new SelectList(radnaMjestaWithOdjeli, "RadnoMjestoId", "CombinedName", zaposlenik.RadnoMjestoId);
+
             return View(zaposlenik);
         }
 

@@ -9,7 +9,6 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Naziv</th>
             <th>Akcije</th>
         </tr>
@@ -18,7 +17,6 @@
         @foreach (var odjel in Model)
         {
             <tr>
-                <td>@odjel.Id</td>
                 <td>@odjel.Naziv</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@odjel.Id" class="btn btn-primary btn-sm">Uredi</a>

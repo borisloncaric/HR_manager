@@ -12,6 +12,7 @@ namespace HR_menager.Models
         private string prezime;
         private string brojTelefona;
         private int radnoMjestoId;
+        private RadnoMjesto? radno_mjesto;
 
         [Key]
         [Column("id")]
@@ -37,7 +38,7 @@ namespace HR_menager.Models
         [Display(Name = "Radno mjesto")]
         public int RadnoMjestoId { get => this.radnoMjestoId;  set { this.radnoMjestoId = value; } }
 
-      
+        public RadnoMjesto? Radnomjesto { get => this.radno_mjesto; set { this.radno_mjesto = value; } }
 
      
     }

@@ -9,7 +9,6 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Naziv</th>
             <th>Odjel</th>
             <th>Akcije</th>
@@ -19,7 +18,6 @@
         @foreach (var rm in Model)
         {
             <tr>
-                <td>@rm.Id</td>
                 <td>@rm.Naziv</td>
                 <td>@ViewBag.Odjeli[rm.OdjelId]</td>
                 <td>
