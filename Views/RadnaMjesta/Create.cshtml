@@ -25,7 +25,7 @@
     <div class="form-group">
         <label asp-for="OdjelId" class="control-label"></label>
         <select asp-for="OdjelId" class="form-control" asp-items="@(new SelectList(ViewBag.Odjeli, "Id", "Naziv"))">
-            <option value="">Izaberi</option>
+            <option value="0">Izaberi/Bez odjela</option>
         </select>
         <span asp-validation-for="OdjelId" class="text-danger"></span>
     </div>

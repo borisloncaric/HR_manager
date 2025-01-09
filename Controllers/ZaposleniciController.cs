@@ -19,25 +19,28 @@ namespace HR_menager.Controllers
         // GET: Zaposlenici
         public ActionResult Index()
         {
-            // Load all zaposlenici
+            // Load zaposlenici
             var zaposlenici = _context.Zaposlenici.ToList();
 
-            // Join RadnaMjesta and Odjeli to create the display dictionary
+            // Perform a left join between RadnaMjesta and Odjeli
             var radnaMjestaWithOdjeli = _context.RadnaMjesta
-                .Join(
+                .GroupJoin(
                     _context.Odjeli,
-                    rm => rm.OdjelId,
-                    o => o.Id,
-                    (rm, o) => new
+                    rm => rm.OdjelId,  // Join condition: RadnoMjesto's OdjelId
+                    o => o.Id,          // Odjel's Id
+                    (rm, odjeli) => new
                     {
                         RadnoMjestoId = rm.Id,
-                        CombinedName = $"{rm.Naziv} ({o.Naziv})"
+                        CombinedName = rm.OdjelId.HasValue
+                            ? $"{rm.Naziv} ({odjeli.FirstOrDefault().Naziv})"  
+                            : $"{ rm.Naziv } (nema odjel)"// If no OdjelId
                     }
-                ).ToDictionary(x => x.RadnoMjestoId, x => x.CombinedName);
+                )
+                .ToList() 
+                .ToDictionary(x => x.RadnoMjestoId, x => x.CombinedName); 
 
             // Pass the dictionary to the ViewBag
             ViewBag.RadnaMjesta = radnaMjestaWithOdjeli;
-
             return View(zaposlenici);
         }
 
@@ -53,18 +56,21 @@ namespace HR_menager.Controllers
         // GET: Zaposlenici/Create
         public ActionResult Create()
         {
-            // Combine RadnoMjesto and Odjel
+            // Perform a left join between RadnaMjesta and Odjeli
             var radnaMjestaWithOdjeli = _context.RadnaMjesta
-                .Join(
-                    _context.Odjeli, // Join with Odjeli
-                    rm => rm.OdjelId, // Foreign key
-                    o => o.Id,        // Primary key
-                    (rm, o) => new
+                .GroupJoin(
+                    _context.Odjeli,
+                    rm => rm.OdjelId,  // Join condition: RadnoMjesto's OdjelId
+                    o => o.Id,         // Odjel's Id
+                    (rm, odjeli) => new
                     {
-                        Id = rm.Id,
-                        Naziv = $"{rm.Naziv} ({o.Naziv})" // Combine RadnoMjesto and Odjel
+                        Id = rm.Id,  // Ensure this matches the "Id" expected in the view
+                        Naziv = rm.OdjelId.HasValue
+                            ? $"{rm.Naziv} ({odjeli.FirstOrDefault().Naziv ?? "nema odjel"})"
+                            : $"{rm.Naziv} (nema odjel)" // If no OdjelId
                     }
-                ).ToList();
+                )
+                .ToList();
 
             // Pass the combined list to the view
             ViewBag.RadnaMjesta = new SelectList(radnaMjestaWithOdjeli, "Id", "Naziv");
@@ -76,33 +82,30 @@ namespace HR_menager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind("Ime, Prezime, BrojTelefona, RadnoMjestoId")] Zaposlenik zaposlenik)
         {
+            if (zaposlenik.RadnoMjestoId == 0) zaposlenik.RadnoMjestoId = null;
             if (ModelState.IsValid)
             {
-                // Optional: Verify or fetch the associated Odjel if needed
-                var radnoMjesto = _context.RadnaMjesta.FirstOrDefault(rm => rm.Id == zaposlenik.RadnoMjestoId);
-                if (radnoMjesto == null)
-                {
-                    ModelState.AddModelError("RadnoMjestoId", "Invalid RadnoMjesto selected.");
-                    return View(zaposlenik);
-                }
-
+              
                 _context.Zaposlenici.Add(zaposlenik);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
 
-            // Repopulate dropdown in case of validation error
+            // Repopulate dropdown in case of validation error or exception
             var radnaMjestaWithOdjeli = _context.RadnaMjesta
-                .Join(
+                .GroupJoin(
                     _context.Odjeli,
                     rm => rm.OdjelId,
                     o => o.Id,
-                    (rm, o) => new
+                    (rm, odjeli) => new
                     {
                         Id = rm.Id,
-                        Naziv = $"{rm.Naziv} ({o.Naziv})"
+                        Naziv = rm.OdjelId.HasValue
+                            ? $"{rm.Naziv} ({odjeli.FirstOrDefault().Naziv ?? "nema odjel"})"
+                            : $"{rm.Naziv} (nema odjel)"
                     }
                 ).ToList();
+
             ViewBag.RadnaMjesta = new SelectList(radnaMjestaWithOdjeli, "Id", "Naziv");
 
             return View(zaposlenik);
@@ -146,7 +149,7 @@ namespace HR_menager.Controllers
             {
                 return NotFound();
             }
-
+            if (zaposlenik.RadnoMjestoId == 0) zaposlenik.RadnoMjestoId = null;
             if (ModelState.IsValid)
             {
                 try
@@ -193,7 +196,8 @@ namespace HR_menager.Controllers
         public ActionResult Delete(int id)
         {
             Zaposlenik? zap = _context.Zaposlenici.FirstOrDefault(zap => zap.Id == id);
-            ViewBag.radnoMjesto = _context.RadnaMjesta.FirstOrDefault(rm=>rm.Id == zap.RadnoMjestoId).Naziv;
+            if (zap != null && zap.RadnoMjestoId != null) ViewBag.RadnoMjesto = _context.RadnaMjesta.FirstOrDefault(rm => rm.Id == zap.RadnoMjestoId).Naziv;
+            else ViewBag.RadnoMjesto = "Nema radno mjesto";
             if (zap != null) return View(zap);
             else
                 return NotFound();

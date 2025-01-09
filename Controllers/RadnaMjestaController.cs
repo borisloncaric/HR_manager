@@ -26,7 +26,7 @@ namespace HR_menager.Controllers
         // GET: RadnaMjestaController/Details/5
         public ActionResult Details(int id)
         {
-            RadnoMjesto rm = _context.RadnaMjesta.FirstOrDefault(r => r.Id == id);
+            RadnoMjesto? rm = _context.RadnaMjesta.FirstOrDefault(r => r.Id == id);
             if (rm != null) return View(rm);
             else
                 return NotFound();
@@ -44,6 +44,7 @@ namespace HR_menager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(int id, [Bind("Id, Naziv,OdjelId")] RadnoMjesto radnoMjesto)
         {
+            if (radnoMjesto.OdjelId == 0) radnoMjesto.OdjelId = null;
             if (ModelState.IsValid)
             {
                 // Add the new RadnoMjesto to the database
@@ -85,11 +86,17 @@ namespace HR_menager.Controllers
             {
                 try
                 {
-                    var odjel = _context.Odjeli.FirstOrDefault(o => o.Id == radnoMjesto.OdjelId);
-                    if (odjel != null)
+                    //ako se ne odabere odjel onda je null
+                    if (radnoMjesto.OdjelId == 0) radnoMjesto.OdjelId = null; 
+                    else
                     {
-                        radnoMjesto.OdjelId = odjel.Id;
+                        var odjel = _context.Odjeli.FirstOrDefault(o => o.Id == radnoMjesto.OdjelId);
+                        if (odjel != null)
+                        {
+                            radnoMjesto.OdjelId = odjel.Id;
+                        }
                     }
+                
                     _context.Update(radnoMjesto);
                     _context.SaveChanges();
                 }

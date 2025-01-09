@@ -116,10 +116,9 @@ namespace HR_menager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
+            var odj = _context.Odjeli.FirstOrDefault(o => o.Id == id);
             try
             {
-                var odj = _context.Odjeli.FirstOrDefault(o => o.Id == id);
-
                 if (odj == null)
                 {
                     return NotFound();
@@ -129,6 +128,12 @@ namespace HR_menager.Controllers
                 _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                ModelState.AddModelError("", "Ne možete izbrisati odjel jer postoje povezana radna mjesta. Izbrišite zavisna radna mjesta prije brisanja.");
+                ViewBag.radnaMjesta = _context.RadnaMjesta.Where(rm => rm.OdjelId == odj.Id).ToList();
+                return View(odj);
             }
             catch
             {

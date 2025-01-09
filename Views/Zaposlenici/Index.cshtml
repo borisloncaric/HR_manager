@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HR_menager.Models.Zaposlenik>
+﻿@model List<HR_menager.Models.Zaposlenik>
 
 @{
     ViewData["Title"] = "Popis zaposlenika";
@@ -24,7 +24,17 @@
                 <td>@zaposlenik.Id</td>
                 <td>@zaposlenik.Ime</td>
                 <td>@zaposlenik.Prezime</td>
-                <td>@ViewBag.RadnaMjesta[@zaposlenik.RadnoMjestoId]</td>
+              
+                <td>
+                    @if (zaposlenik.RadnoMjestoId.HasValue)
+                    {
+                        @ViewBag.RadnaMjesta[zaposlenik.RadnoMjestoId.Value]
+                    }
+                    else
+                    {
+                        <span class="text-danger">Nema radno mjesto</span>
+                    }
+                </td>
                 <td>@zaposlenik.BrojTelefona</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@zaposlenik.Id" class="btn btn-primary btn-sm">Uredi</a>

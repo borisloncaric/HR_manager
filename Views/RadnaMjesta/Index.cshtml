@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HR_menager.Models.RadnoMjesto>
+﻿@model List<HR_menager.Models.RadnoMjesto>
 
 @{
     ViewData["Title"] = "Popis radnih mjesta";
@@ -15,14 +15,23 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var rm in Model)
+        @foreach (var radnoMjesto in Model)
         {
             <tr>
-                <td>@rm.Naziv</td>
-                <td>@ViewBag.Odjeli[rm.OdjelId]</td>
+                <td>@radnoMjesto.Naziv</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@rm.Id" class="btn btn-primary btn-sm">Uredi</a>
-                    <a asp-action="Delete" asp-route-id="@rm.Id" class="btn btn-danger btn-sm">Izbriši</a>
+                    @if (radnoMjesto.OdjelId.HasValue)
+                    {
+                        @ViewBag.Odjeli[radnoMjesto.OdjelId.Value]
+                    }
+                    else
+                    {
+                        <span class="text-danger">Bez odjela</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@radnoMjesto.Id" class="btn btn-primary btn-sm">Uredi</a>
+                    <a asp-action="Delete" asp-route-id="@radnoMjesto.Id" class="btn btn-danger btn-sm">Izbriši</a>
                 </td>
             </tr>
         }

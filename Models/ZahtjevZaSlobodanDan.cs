@@ -11,6 +11,11 @@
         private string razlog;
         private StatusZahtjeva? status;
 
+
+        //osoba koja je obradila zahtjev
+        private int? obradioZaposlenikId;
+        private Zaposlenik? obradioZaposlenik;
+
         public int Id { get => this.id; private set { this.id = value; } }
         public Zaposlenik Zaposlenik { get => this.zaposlenik;  set { this.zaposlenik = value; } }
         public DateOnly DatumZahtjeva { get => this.datumZahtjeva;  set { this.datumZahtjeva = value; } }
@@ -19,6 +24,8 @@
         public string Razlog { get => this.razlog;  set { this.razlog = value; } }
         public StatusZahtjeva? StatusZahtjeva { get => this.status;  set { this.status = value; } }
 
+        public int? ObradioZaposlenikId { get => this.obradioZaposlenikId; set { this.obradioZaposlenikId = value; } }
+        public Zaposlenik? ObradioZaposlenik { get => this.obradioZaposlenik; set { this.obradioZaposlenik = value; } }
         public ZahtjevZaSlobodanDan()
         {
          

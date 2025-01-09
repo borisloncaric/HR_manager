@@ -41,7 +41,7 @@
     <div class="form-group">
         <label asp-for="RadnoMjestoId" class="control-label"></label>
         <select asp-for="RadnoMjestoId" class="form-control" asp-items="@ViewBag.RadnaMjesta">
-            
+            <option value="0">Izaberi/Nema radno mj.</option>
         </select>
         <span asp-validation-for="RadnoMjestoId" class="text-danger"></span>
     </div>

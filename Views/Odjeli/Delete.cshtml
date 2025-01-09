@@ -3,8 +3,25 @@
 @{
     ViewData["Title"] = "Izbriši odjel";
 }
+@if (!ViewContext.ViewData.ModelState.IsValid)
+{
+            <div class="alert alert-danger">
+                <ul>
+            @foreach (var error in ViewContext.ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                            <li>@error.ErrorMessage</li>
+            }
+                </ul>
+            </div>
+}
+@if (ViewBag.radnaMjesta != null && ((List<RadnoMjesto>)ViewBag.radnaMjesta).Any())
+{
+    <p class="text-danger">Brisanjem odjela brišu se i sva povezana radna mjesta.</p>
+}
 
 <h2>Želite li izbrisati odjel?</h2>
+
+
 
 <div>
     <h4>Odjel</h4>
@@ -12,28 +29,36 @@
     <dl class="dl-horizontal">
         <dt>Šifra odjela:</dt>
         <dd>@Model.Id</dd>
+
         <dt>Naziv:</dt>
         <dd>@Model.Naziv</dd>
-        <dt>Radna mjesta:</dt>
+
+        <dt>Radna mjesta na odjelu:</dt>
         @if (ViewBag.radnaMjesta != null && ((List<RadnoMjesto>)ViewBag.radnaMjesta).Any())
         {
-         
-            foreach (var mjesto in (List<RadnoMjesto>)ViewBag.radnaMjesta)
+               
+            @foreach (var mjesto in (List<RadnoMjesto>)ViewBag.radnaMjesta)
             {
-                <dd>@mjesto.Naziv</dd>
+                        <dd>@mjesto.Naziv</dd>
             }
         }
         else
         {
-            <dd>Nema radnih mjesta.</dd>
+                <dd>Nema povezanih radnih mjesta.</dd>
         }
     </dl>
+
+   
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger">Izbriši</button>
+                <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+            </form>
+    
 </div>
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Izbriši</button>
-    <a asp-action="Index" class="btn btn-secondary">Odustani</a>
-</form>
+ 
+
+
 
 
