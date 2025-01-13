@@ -4,6 +4,7 @@
     ViewData["Title"] = "Kreiraj odjel";
 }
 <form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
     @if (!ViewContext.ViewData.ModelState.IsValid)
     {
         <div class="alert alert-danger">

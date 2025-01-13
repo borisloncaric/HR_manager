@@ -26,14 +26,10 @@
                 <td>@zaposlenik.Prezime</td>
               
                 <td>
-                    @if (zaposlenik.RadnoMjestoId.HasValue)
-                    {
-                        @ViewBag.RadnaMjesta[zaposlenik.RadnoMjestoId.Value]
-                    }
-                    else
-                    {
-                        <span class="text-danger">Nema radno mjesto</span>
-                    }
+                    @(zaposlenik.Radnomjesto?.Naziv??"Nema radno mj.")
+                    @(zaposlenik.Radnomjesto != null && zaposlenik.Radnomjesto.Odjel != null
+                        ? $" ({zaposlenik.Radnomjesto.Odjel.Naziv})"
+                        : "")
                 </td>
                 <td>@zaposlenik.BrojTelefona</td>
                 <td>

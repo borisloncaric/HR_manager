@@ -14,5 +14,11 @@ namespace HR_menager.BazePodataka_demo
         public DbSet<RadnoMjesto> RadnaMjesta { get; set; }
         public DbSet<Odjel> Odjeli { get; set; }
 
+        //zahtjev za slobodan dan
+        public DbSet<Zahtjev> Zahtjevi { get; set; }
+
+        //statusi
+        public DbSet<StatusZahtjeva> StatusiZahtjeva { get; set; }
+
     }
 }

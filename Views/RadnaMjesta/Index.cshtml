@@ -20,14 +20,7 @@
             <tr>
                 <td>@radnoMjesto.Naziv</td>
                 <td>
-                    @if (radnoMjesto.OdjelId.HasValue)
-                    {
-                        @ViewBag.Odjeli[radnoMjesto.OdjelId.Value]
-                    }
-                    else
-                    {
-                        <span class="text-danger">Bez odjela</span>
-                    }
+                    @(radnoMjesto.Odjel?.Naziv ?? "Nema odjel")
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@radnoMjesto.Id" class="btn btn-primary btn-sm">Uredi</a>

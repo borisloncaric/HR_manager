@@ -131,7 +131,6 @@ namespace HR_menager.Controllers
             }
             catch (DbUpdateException ex)
             {
-                ModelState.AddModelError("", "Ne možete izbrisati odjel jer postoje povezana radna mjesta. Izbrišite zavisna radna mjesta prije brisanja.");
                 ViewBag.radnaMjesta = _context.RadnaMjesta.Where(rm => rm.OdjelId == odj.Id).ToList();
                 return View(odj);
             }

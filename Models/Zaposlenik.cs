@@ -51,6 +51,13 @@ namespace HR_menager.Models
 
         public RadnoMjesto? Radnomjesto { get => this.radno_mjesto; set { this.radno_mjesto = value; } }
 
+        public string VratiImePrezime()
+        {
+
+            if (this.Ime != null && this.Ime != string.Empty) 
+                return (this.ime + " " + this.prezime);
+            else return "Ime i Prezime";
+        }
      
     }
 }

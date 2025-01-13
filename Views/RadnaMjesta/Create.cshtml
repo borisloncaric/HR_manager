@@ -4,6 +4,7 @@
     ViewData["Title"] = "Kreiraj radno mjesto";
 }
 <form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
     @if (!ViewContext.ViewData.ModelState.IsValid)
     {
         <div class="alert alert-danger">

@@ -17,9 +17,8 @@ namespace HR_menager.Controllers
         // GET: RadnaMjestaController
         public ActionResult Index()
         {
-            var radnaMjesta= _context.RadnaMjesta.ToList();
-            var odjeli = _context.Odjeli.ToDictionary(r => r.Id, r => r.Naziv);
-            ViewBag.Odjeli = odjeli;
+            var radnaMjesta= _context.RadnaMjesta.
+                Include(rm=>rm.Odjel).ToList();
             return View(radnaMjesta);
         }
 
