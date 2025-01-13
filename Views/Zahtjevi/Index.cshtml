@@ -1,0 +1,73 @@
+﻿@model List<HR_menager.Models.Zahtjev>
+
+@{
+    ViewData["Title"] = "Popis zahtjeva";
+}
+
+<h2>Popis zahtjeva za slobodan dan</h2>
+@if(Model.Count >0){
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Šifra</th>
+            <th>Datum podnošenja</th>
+            <th>Podnositelj</th>
+            <th>Početni datum</th>
+            <th>Završni datum</th>
+            <th>Razlog</th>
+            <th>Status</th>
+            <th>Obradio</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var zahtjev in Model)
+        {
+            <tr>
+                <td>@zahtjev.Id</td>
+                <td>@zahtjev.DatumZahtjeva</td>
+            @if (zahtjev.Podnositelj != null)
+            {
+                <td>@zahtjev.Podnositelj.VratiImePrezime() <br />Šifra: @zahtjev.PodnositeljId</td>
+            }
+            else
+            {
+                <td class="text-danger">Nema podnositelja</td>
+            }
+                   
+                <td>@zahtjev.PocetniDatum</td>
+                <td>@zahtjev.KrajnjiDatum</td>
+
+                <td>@zahtjev.Razlog</td>
+              @if (zahtjev.StatusZahtjeva != null)
+              {
+                  <td class="@((zahtjev.StatusZahtjeva.Id == 3) ? "text-warning" : "")">@zahtjev.StatusZahtjeva.Status</td>
+              }
+              else
+              {
+                  <td class="text-danger">Bez statusa</td>
+              }
+                    
+              @if (zahtjev.ObradioZaposlenik != null)
+              {
+                  <td>@zahtjev.ObradioZaposlenik.VratiImePrezime() <br />Šifra: @zahtjev.ObradioZaposlenikId</td>
+              }
+              else
+              {
+                  <td class="text-danger">Nije obrađen</td>
+              }
+                <td>
+                    <a asp-action="Edit" asp-route-id="@zahtjev.Id" class="btn btn-primary btn-sm">Uredi</a>
+                    <a asp-action="Delete" asp-route-id="@zahtjev.Id" class="btn btn-danger btn-sm">Izbriši</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+    </table>
+}
+else
+{
+    <h4>Nema zahtjeva za prikaz.</h4><br/>
+}
+
+<a asp-controller="Zahtjevi" asp-action="Create" class="btn btn-success">Dodaj novi zahtjev</a>

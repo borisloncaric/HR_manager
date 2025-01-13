@@ -1,0 +1,42 @@
+﻿@model HR_menager.Models.Zahtjev
+
+@{
+    ViewData["Title"] = "Izbriši zahtjev";
+}
+
+<h2>Želite li izbrisati zahtjev za slobodne dane?</h2>
+
+<div>
+    <h4>Zahtjev</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Šifra:</dt>
+        <dd>@Model.Id</dd>
+        <dt>Podnositelj:</dt>
+        <dd>@(Model.Podnositelj?.VratiImePrezime()+ $" ({Model.Podnositelj?.Id})"??"Greška")</dd>
+        <dt>Radno mjesto i odjel podnositelja:</dt>
+        @if(Model.Podnositelj?.Radnomjesto != null)
+        {
+            <dd>@(Model.Podnositelj.Radnomjesto.Naziv) (@(Model.Podnositelj.Radnomjesto.Odjel?.Naziv ?? "Nema odjel"))</dd>
+        }
+        else
+        {
+            <dd>Nema radno mjesto</dd>
+        }
+        <dt>Datum podnošenja zahtjeva:</dt>
+        <dd>@(Model.DatumZahtjeva?.ToString()?? "Greška")</dd>
+        <dt>Početni datum:</dt>
+        <dd>@(Model.PocetniDatum?.ToString() ?? "Greška")</dd>
+        <dt>Krajnji datum:</dt>
+        <dd>@(Model.KrajnjiDatum?.ToString() ?? "Greška")</dd>
+        <dt>Status zahtjeva:</dt>
+        <dd>@(Model.StatusZahtjeva?.Status ?? "Greška")</dd>
+    </dl>
+</div>
+
+<form asp-controller="Zahtjevi" asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Izbriši</button>
+    <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+</form>
